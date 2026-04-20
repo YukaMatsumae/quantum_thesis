@@ -49,7 +49,34 @@ def square_wave_demo():
     (t, g) = square_wave(f, overSampRate, nCy1)
     plt.figure(num = "square_wave_standard" )
     plt.plot(t, g)
-    plt.title("Sine wave f = "+ str(f) + "Hz")
+    plt.title("Square wave f = "+ str(f) + "Hz")
     plt.xlabel("Time[s]")
     plt.ylabel("Amplitude")
     plt.show()
+
+#矩形波の生成
+def rect_pulse(A, fs, T):
+    import numpy as np
+    t = np.arange(-0.5, 0.5, 1/fs)
+
+    rect = np.where(np.abs(t) < T/2, 1.0, 0.0)  #where(条件、True、False)
+    rect[np.isclose(np.abs(t), T/2)] = 0.5 #isclose　数字を丸めてくれる。
+
+    g = A*rect
+    return (t, g)
+
+#矩形波の例、可視化
+def rect_pulse_demo():
+    import matplotlib.pyplot as plt
+    A = 1
+    fs = 500 #サンプリング周波数
+    T = 0.4
+
+    (t, g) = rect_pulse(A, fs, T)
+    plt.figure(num = "rect_pulse_standard" )
+    plt.plot(t, g)
+    plt.xlabel("Time[s]")
+    plt.ylabel("Amplitude")
+    plt.show()
+
+
