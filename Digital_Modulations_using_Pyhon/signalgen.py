@@ -79,4 +79,37 @@ def rect_pulse_demo():
     plt.ylabel("Amplitude")
     plt.show()
 
+#ガウシアンパルスの生成
+def gaussian_pulse(fs, sigma):
+    import numpy as np
 
+    t = np.arange(-0.5, 0.5, 1/fs)
+    g = 1 / (np.sqrt(2*np.pi)*sigma) * ( np.exp(-t**2 /(sigma**2)))
+
+    return (t, g)
+
+# ガウシアンパルスの例、可視化
+def gaussian_pulse_demo():
+    import matplotlib.pyplot as plt
+
+    fs = 500
+    sigma = 0.1
+
+    (t, g) = gaussian_pulse(fs, sigma)
+    plt.figure(num = "gaussian_pulse_standard" )
+    plt.plot(t, g)
+    plt.xlabel("Time[s]")
+    plt.ylabel("Amplitude")
+    plt.show()
+
+#チャープ信号の例、可視化(生成はなし)
+def chirp_demo():
+    import numpy as np
+    import matplotlib.pyplot as plt
+    from scipy.signal import chirp
+
+    fs = 500
+    t = np.arange(start = 0, stop = 1, step = 1/fs)
+    g = chirp(t, f0 = 1, t1 = 0.5, f1 = 20, phi = 0, method = "linear")
+    plt.plot(t, g)
+    plt.show()

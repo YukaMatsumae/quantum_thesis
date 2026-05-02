@@ -3,8 +3,8 @@ import Qstate
 
 # 共有パラメータ
 N = 8
-M = 1000
-S_max = 199
+M = 200
+S_max = 0.1
 BNum = 2**N
 S_levels = np.linspace(0, S_max, BNum*2)
 
@@ -39,3 +39,4 @@ def generate_signals():
 # 直接実行した時だけ動く（import時には動かない）
 if __name__ == "__main__":
     print(f"{M}個の信号を生成しました。")
+
