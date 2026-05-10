@@ -102,7 +102,7 @@ def gaussian_pulse_demo():
     plt.ylabel("Amplitude")
     plt.show()
 
-#チャープ信号の例、可視化(生成はなし)
+#チャープ信号の例、可視化(生成関数を含む)
 def chirp_demo():
     import numpy as np
     import matplotlib.pyplot as plt

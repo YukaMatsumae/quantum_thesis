@@ -19,7 +19,7 @@ import numpy as np
 import Qstate_claude as Qstate
 
 # ── 共有パラメータ ──────────────────────────────────────────
-N     = 8
+N     = 12
 M     = 200
 S_max = 10.0
 BNum  = 2 ** N
