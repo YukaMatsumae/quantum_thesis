@@ -26,7 +26,7 @@ BNum  = 2 ** N
 S_levels = np.linspace(0, S_max, BNum * 2)
 
 # LFSR初期レジスタ (固定鍵)
-_INIT_REG = [1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1]
+_INIT_REG = [1, 0, 1, 1]
 
 # LFSRの現在の状態
 _current_reg = None
@@ -67,9 +67,10 @@ def _lfsr_to_base_ids(n_symbols: int) -> np.ndarray:
     bits = np.empty(total_bits, dtype=np.uint8)
 
     for k in range(total_bits):
-        SR       = ((reg >> 10) ^ (reg >> 12) ^ (reg >> 13) ^ (reg >> 15)) & 1
-        bits[k]  = (reg >> 15) & 1
-        reg      = ((reg << 1) & 0xFFFF) | SR
+        # 4-bit LFSR (タップ: bit[2], bit[3])
+        SR       = ((reg >> 2) ^ (reg >> 3)) & 1
+        bits[k]  = (reg >> 3) & 1
+        reg      = ((reg << 1) & 0xF) | SR
 
     _current_reg = reg
 
