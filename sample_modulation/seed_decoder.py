@@ -16,7 +16,7 @@ import numpy as np
 import yaml
 import matplotlib.pyplot as plt
 import os
-
+import japanize_matplotlib
 
 # ══════════════════════════════════════════════
 # LFSR駆動 & 解読ロジック
