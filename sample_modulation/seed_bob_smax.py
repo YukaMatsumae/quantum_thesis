@@ -18,6 +18,7 @@ from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 import time
+import yaml
 
 # ══════════════════════════════════════════════
 # 定数・設定
@@ -130,41 +131,40 @@ def bob_decode(n_samples, lfsr_length, seq_len, noise_scale, s_max):
 # ══════════════════════════════════════════════
 
 def plot_bob_results(results_matrix, lfsr_lengths, smax_values):
-    """Bobの復号BER vs S_max グラフ（4パネル）。"""
+    """Plot Bob's decoding BER 4-panel graph (English)."""
     fig, axes = plt.subplots(2, 2, figsize=(16, 12))
     colors = plt.cm.viridis(np.linspace(0.1, 0.9, len(lfsr_lengths)))
 
-    # ── Panel 1: BER vs S_max ──
+    # Panel 1: BER vs S_max (Linear)
     ax = axes[0, 0]
     for i, l_len in enumerate(lfsr_lengths):
         bers = [results_matrix[l_len][s]['ber'] for s in smax_values]
         ax.plot(smax_values, bers, marker='o', linewidth=2, color=colors[i],
                 label=f'LFSR {l_len}bit', markersize=6)
     ax.axhline(y=0.5, color='red', linestyle='--', alpha=0.5, label='Random Guess (0.5)')
-    ax.set_xlabel('S_max (Signal Level Range)', fontsize=12)
+    ax.set_xlabel('S_max (Signal Range)', fontsize=12)
     ax.set_ylabel('Data BER', fontsize=12)
-    ax.set_title('Legitimate Receiver (Bob) — Data BER vs S_max', fontsize=14)
+    ax.set_title('Legitimate Receiver (Bob) — Data BER vs S_max (Linear)', fontsize=14)
     ax.set_ylim(-0.01, max(0.1, ax.get_ylim()[1]))
     ax.set_xticks(smax_values)
     ax.grid(True, linestyle=':', alpha=0.7)
     ax.legend(fontsize=10)
 
-    # ── Panel 2: BER vs S_max (log scale) ──
+    # Panel 2: BER vs S_max (Log)
     ax = axes[0, 1]
     for i, l_len in enumerate(lfsr_lengths):
         bers = [max(results_matrix[l_len][s]['ber'], 1e-6) for s in smax_values]
         ax.semilogy(smax_values, bers, marker='s', linewidth=2, color=colors[i],
                      label=f'LFSR {l_len}bit', markersize=6)
-    ax.set_xlabel('S_max (Signal Level Range)', fontsize=12)
-    ax.set_ylabel('Data BER (log scale)', fontsize=12)
+    ax.set_xlabel('S_max (Signal Range)', fontsize=12)
+    ax.set_ylabel('Data BER (Log Scale)', fontsize=12)
     ax.set_title('Legitimate Receiver (Bob) — Data BER vs S_max (Log)', fontsize=14)
     ax.set_xticks(smax_values)
     ax.grid(True, linestyle=':', alpha=0.7, which='both')
     ax.legend(fontsize=10)
 
-    # ── Panel 3: Error Distribution (box plot at worst S_max) ──
+    # Panel 3: Error Distribution (Box plot at worst S_max = 1)
     ax = axes[1, 0]
-    # S_max=1（最も厳しい条件）でのエラー分布
     worst_smax = smax_values[0]
     box_data = [results_matrix[l][worst_smax]['errors_per_sample'] for l in lfsr_lengths]
     bp = ax.boxplot(box_data, labels=[f'{l}bit' for l in lfsr_lengths], patch_artist=True)
@@ -172,11 +172,11 @@ def plot_bob_results(results_matrix, lfsr_lengths, smax_values):
         patch.set_facecolor(c)
         patch.set_alpha(0.6)
     ax.set_xlabel('LFSR Bit Length', fontsize=12)
-    ax.set_ylabel(f'Errors per Sample (seq_len symbols)', fontsize=12)
-    ax.set_title(f'Error Distribution at S_max = {worst_smax}', fontsize=14)
+    ax.set_ylabel('Errors per Sequence', fontsize=12)
+    ax.set_title(f'Error Distribution per Sequence at S_max = {worst_smax}', fontsize=14)
     ax.grid(True, linestyle=':', alpha=0.7, axis='y')
 
-    # ── Panel 4: Heatmap (LFSR length x S_max → BER) ──
+    # Panel 4: Heatmap (LFSR length x S_max -> BER)
     ax = axes[1, 1]
     ber_matrix = np.array([
         [results_matrix[l][s]['ber'] for s in smax_values]
@@ -190,7 +190,7 @@ def plot_bob_results(results_matrix, lfsr_lengths, smax_values):
     ax.set_yticklabels([f'{l}bit' for l in lfsr_lengths])
     ax.set_xlabel('S_max', fontsize=12)
     ax.set_ylabel('LFSR Bit Length', fontsize=12)
-    ax.set_title('Data BER Heatmap (LFSR Length x S_max)', fontsize=14)
+    ax.set_title('Data BER Heatmap (Bob Decode)', fontsize=14)
     for yi in range(len(lfsr_lengths)):
         for xi in range(len(smax_values)):
             val = ber_matrix[yi, xi]
@@ -199,17 +199,16 @@ def plot_bob_results(results_matrix, lfsr_lengths, smax_values):
                     fontsize=8, color=text_color, fontweight='bold')
     fig.colorbar(im, ax=ax, label='BER')
 
-    fig.suptitle(f'Y00 Legitimate Receiver (Bob) Decoding Performance\n'
-                 f'Noise Scale = {QUANTUM_NOISE_SCALE}',
+    fig.suptitle(f'Y00 Legitimate Receiver (Bob) Decoding Performance (sigma={QUANTUM_NOISE_SCALE})',
                  fontsize=16, y=1.02)
     fig.tight_layout()
     out = 'seed_bob_smax_results.png'
     plt.savefig(out, dpi=300, bbox_inches='tight')
-    print(f"\n4パネルグラフを {out} として保存しました。")
+    print(f"Bob 4-panel graph saved: {out}")
 
 
 def plot_bob_ber_single(results_matrix, lfsr_lengths, smax_values):
-    """BER vs S_max の1枚グラフ。"""
+    """Plot Bob decoding BER vs S_max on a single graph (English)."""
     fig, ax = plt.subplots(figsize=(10, 6))
     colors = plt.cm.tab10(np.linspace(0, 0.4, len(lfsr_lengths)))
     markers = ['o', 's', '^', 'D']
@@ -220,10 +219,9 @@ def plot_bob_ber_single(results_matrix, lfsr_lengths, smax_values):
                 color=colors[i], label=f'LFSR {l_len}bit', markersize=8)
 
     ax.axhline(y=0.5, color='red', linestyle='--', alpha=0.5, label='Random Guess (0.5)')
-    ax.set_xlabel('S_max (Signal Level Range)', fontsize=14)
-    ax.set_ylabel('Data BER (Legitimate Receiver)', fontsize=14)
-    ax.set_title(f'Bob Decoding BER vs S_max (Noise Scale = {QUANTUM_NOISE_SCALE})',
-                 fontsize=15)
+    ax.set_xlabel('S_max (Signal Range)', fontsize=14)
+    ax.set_ylabel('Data BER', fontsize=14)
+    ax.set_title(f'Bob Decoding BER vs S_max (sigma={QUANTUM_NOISE_SCALE})', fontsize=15)
     ax.set_xticks(smax_values)
     ax.set_ylim(-0.005, max(0.05, ax.get_ylim()[1]))
     ax.grid(True, linestyle=':', alpha=0.7)
@@ -231,7 +229,85 @@ def plot_bob_ber_single(results_matrix, lfsr_lengths, smax_values):
     fig.tight_layout()
     out = 'seed_bob_smax_ber_single.png'
     plt.savefig(out, dpi=300, bbox_inches='tight')
-    print(f"BER単体グラフを {out} として保存しました。")
+    print(f"Bob single BER graph saved: {out}")
+
+
+def plot_comparison_with_eve(bob_results, lfsr_lengths, smax_values, eve_yaml_path='eve_smax_results.yaml'):
+    """Plot comparison of Bob and Eve's Data BER on a single figure (linear & log)."""
+    if not os.path.exists(eve_yaml_path):
+        print(f"Eve results file not found at {eve_yaml_path}. Skipping comparison plot.")
+        return
+
+    try:
+        with open(eve_yaml_path, 'r') as f:
+            eve_data = yaml.safe_load(f)
+    except Exception as e:
+        print(f"Error loading {eve_yaml_path}: {e}. Skipping comparison plot.")
+        return
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 6))
+    colors = plt.cm.tab10(np.linspace(0, 0.4, len(lfsr_lengths)))
+    markers = ['o', 's', '^', 'D']
+
+    # Linear Plot
+    for i, l_len in enumerate(lfsr_lengths):
+        # Bob
+        bob_bers = [bob_results[l_len][s]['ber'] for s in smax_values]
+        ax1.plot(smax_values, bob_bers, marker=markers[i], linestyle='-', linewidth=2.5,
+                 color=colors[i], label=f'Bob (LFSR {l_len}bit)', markersize=8)
+        # Eve
+        key = l_len if l_len in eve_data else str(l_len)
+        if key in eve_data:
+            eve_bers = []
+            for s in smax_values:
+                s_key = s if s in eve_data[key] else int(s)
+                if s_key in eve_data[key]:
+                    eve_bers.append(eve_data[key][s_key]['data_ber'])
+                else:
+                    eve_bers.append(np.nan)
+            ax1.plot(smax_values, eve_bers, marker=markers[i], linestyle='--', linewidth=2.0,
+                     color=colors[i], label=f'Eve (LFSR {l_len}bit)', markersize=7)
+
+    ax1.axhline(y=0.5, color='red', linestyle=':', alpha=0.5, label='Random Guess (0.5)')
+    ax1.set_xlabel('S_max (Signal Range)', fontsize=14)
+    ax1.set_ylabel('Data BER', fontsize=14)
+    ax1.set_title('Bob vs Eve: Decoded Data BER (Linear)', fontsize=15)
+    ax1.set_xticks(smax_values)
+    ax1.set_ylim(-0.02, 0.55)
+    ax1.grid(True, linestyle=':', alpha=0.7)
+    ax1.legend(fontsize=11)
+
+    # Log Plot
+    for i, l_len in enumerate(lfsr_lengths):
+        # Bob
+        bob_bers = [max(bob_results[l_len][s]['ber'], 1e-6) for s in smax_values]
+        ax2.semilogy(smax_values, bob_bers, marker=markers[i], linestyle='-', linewidth=2.5,
+                     color=colors[i], label=f'Bob (LFSR {l_len}bit)', markersize=8)
+        # Eve
+        key = l_len if l_len in eve_data else str(l_len)
+        if key in eve_data:
+            eve_bers = []
+            for s in smax_values:
+                s_key = s if s in eve_data[key] else int(s)
+                if s_key in eve_data[key]:
+                    eve_bers.append(max(eve_data[key][s_key]['data_ber'], 1e-6))
+                else:
+                    eve_bers.append(np.nan)
+            ax2.semilogy(smax_values, eve_bers, marker=markers[i], linestyle='--', linewidth=2.0,
+                         color=colors[i], label=f'Eve (LFSR {l_len}bit)', markersize=7)
+
+    ax2.set_xlabel('S_max (Signal Range)', fontsize=14)
+    ax2.set_ylabel('Data BER (Log Scale)', fontsize=14)
+    ax2.set_title('Bob vs Eve: Decoded Data BER (Log)', fontsize=15)
+    ax2.set_xticks(smax_values)
+    ax2.grid(True, linestyle=':', alpha=0.7, which='both')
+    ax2.legend(fontsize=11)
+
+    fig.suptitle(f'Security Performance Comparison (Bob vs Eve) (sigma={QUANTUM_NOISE_SCALE})', fontsize=16, y=1.02)
+    fig.tight_layout()
+    out = 'compare_eve_vs_bob_data_ber.png'
+    plt.savefig(out, dpi=300, bbox_inches='tight')
+    print(f"Security comparison graph saved: {out}")
 
 
 # ══════════════════════════════════════════════
@@ -264,15 +340,15 @@ class TeeLogger:
 
 def main():
     print("=" * 65)
-    print("  Y00 正規受信者（Bob）復号性能 — S_max 掃引実験")
+    print("  Y00 Legitimate Receiver (Bob) Performance — S_max Sweep")
     print("=" * 65)
-    print(f"サンプル数: {N_SAMPLES:,}")
-    print(f"量子ノイズスケール: {QUANTUM_NOISE_SCALE}")
-    print(f"検証LFSR長: {LFSR_LENGTHS}")
-    print(f"S_max 掃引値: {SMAX_VALUES}")
+    print(f"Number of Samples: {N_SAMPLES:,}")
+    print(f"Quantum Noise Scale (sigma): {QUANTUM_NOISE_SCALE}")
+    print(f"Target LFSR Bit Lengths: {LFSR_LENGTHS}")
+    print(f"S_max Sweep values: {SMAX_VALUES}")
     print()
-    print("※ 正規受信者はシード値を知っており、閾値復号で送信データを復号します。")
-    print("※ NNは使用しません（解析的復号）。")
+    print("Note: Bob knows the initial seed, performing threshold decoding analytically.")
+    print("Note: Neural network is not used here (analytical reference).")
     print()
 
     results_matrix = {l: {} for l in LFSR_LENGTHS}
@@ -282,18 +358,18 @@ def main():
         print(f"  S_max = {s_max}")
         print(f"{'#' * 65}")
 
-        # S_maxとσから信号レベル間隔を計算して表示
+        # Level spacing details
         N = 12
         BNum = 2 ** N
         level_spacing = s_max / (BNum * 2 - 1)
         snr_approx = level_spacing / QUANTUM_NOISE_SCALE if QUANTUM_NOISE_SCALE > 0 else float('inf')
-        print(f"  信号レベル間隔: {level_spacing:.6f}")
-        print(f"  信号レベル間隔 / σ (SNR的指標): {snr_approx:.4f}")
+        print(f"  Signal Level Spacing: {level_spacing:.6f}")
+        print(f"  Spacing / sigma (Effective SNR indicator): {snr_approx:.4f}")
 
         for l_len in LFSR_LENGTHS:
             seq_len = SEQ_LEN_MAP[l_len]
-            print(f"\n  ── LFSR {l_len}bit (周期: {(1 << l_len) - 1}, "
-                  f"系列長: {seq_len}) ──")
+            print(f"\n  ── LFSR {l_len}bit (Cycle: {(1 << l_len) - 1}, "
+                  f"Length: {seq_len}) ──")
 
             t_start = time.time()
             result = bob_decode(N_SAMPLES, l_len, seq_len,
@@ -302,13 +378,13 @@ def main():
 
             results_matrix[l_len][s_max] = result
 
-            print(f"  データBER:     {result['ber']:.6f}")
-            print(f"  エラービット数: {result['n_errors']:,} / {result['n_total']:,}")
-            print(f"  所要時間: {elapsed:.2f} 秒")
+            print(f"  Data BER:       {result['ber']:.6f}")
+            print(f"  Error Bits:     {result['n_errors']:,} / {result['n_total']:,}")
+            print(f"  Elapsed Time:   {elapsed:.2f} s")
 
-    # ── 全結果サマリー（BER）──
+    # ── Summary (BER) ──
     print("\n" + "=" * 80)
-    print("  全結果サマリー — 正規受信者（Bob）データBER")
+    print("  Data BER Summary — Legitimate Receiver (Bob)")
     print("=" * 80)
     header = f"{'LFSR':>6} |"
     for s in SMAX_VALUES:
@@ -322,9 +398,9 @@ def main():
             row += f" {ber:.4f} |"
         print(row)
 
-    # ── S_max と BER の関係分析 ──
+    # ── Threshold Analysis ──
     print(f"\n{'=' * 80}")
-    print("  分析: BER < 1e-3（実用的な通信品質）を達成する最小 S_max")
+    print("  Analysis: Minimum S_max required to reach BER < 1e-3 (practical communication)")
     print("=" * 80)
     for l_len in LFSR_LENGTHS:
         min_smax = None
@@ -333,14 +409,15 @@ def main():
                 min_smax = s
                 break
         if min_smax is not None:
-            print(f"  LFSR {l_len:>2}bit: S_max >= {min_smax} で BER < 0.001 達成")
+            print(f"  LFSR {l_len:>2}bit: S_max >= {min_smax} reaches BER < 0.001")
         else:
-            print(f"  LFSR {l_len:>2}bit: S_max=10 でも BER >= 0.001")
+            print(f"  LFSR {l_len:>2}bit: BER >= 0.001 even at S_max=10")
 
-    # ── グラフ描画 ──
-    print("\nグラフを描画中...")
+    # ── Plotting ──
+    print("\nGenerating plots...")
     plot_bob_results(results_matrix, LFSR_LENGTHS, SMAX_VALUES)
     plot_bob_ber_single(results_matrix, LFSR_LENGTHS, SMAX_VALUES)
+    plot_comparison_with_eve(results_matrix, LFSR_LENGTHS, SMAX_VALUES)
 
 
 if __name__ == "__main__":
@@ -349,11 +426,11 @@ if __name__ == "__main__":
     tee = TeeLogger(log_filename)
     sys.stdout = tee
 
-    print(f"ログファイル: {log_filename}")
+    print(f"Log file: {log_filename}")
     t0 = time.time()
     main()
     elapsed = time.time() - t0
-    print(f"\n総実行時間: {elapsed:.1f} 秒 ({elapsed / 60:.1f} 分)")
+    print(f"\nTotal Elapsed Time: {elapsed:.1f} s ({elapsed / 60:.1f} min)")
 
     tee.close()
-    print(f"ログを {log_filename} に保存しました。")
+    print(f"Log saved to {log_filename}")
