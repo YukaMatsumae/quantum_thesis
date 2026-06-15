@@ -1,0 +1,164 @@
+4:
+  1:
+    data_ber: 0.484484375
+    exact_match: 0.1592
+    seed_ber: 0.40345
+  2:
+    data_ber: 0.326940625
+    exact_match: 0.6036
+    seed_ber: 0.19599999999999995
+  3:
+    data_ber: 0.147875
+    exact_match: 0.856
+    seed_ber: 0.07440000000000002
+  4:
+    data_ber: 0.04634375
+    exact_match: 0.9636
+    seed_ber: 0.019299999999999984
+  5:
+    data_ber: 0.01055
+    exact_match: 0.9936
+    seed_ber: 0.003149999999999986
+  6:
+    data_ber: 0.001728125
+    exact_match: 0.9996
+    seed_ber: 0.00024999999999997247
+  7:
+    data_ber: 0.00094375
+    exact_match: 0.999
+    seed_ber: 0.0004999999999999449
+  8:
+    data_ber: 3.4375e-05
+    exact_match: 1.0
+    seed_ber: 0.0
+  9:
+    data_ber: 6.25e-06
+    exact_match: 1.0
+    seed_ber: 0.0
+  10:
+    data_ber: 0.0
+    exact_match: 1.0
+    seed_ber: 0.0
+6:
+  1:
+    data_ber: 0.500259375
+    exact_match: 0.024125
+    seed_ber: 0.44833333333333336
+  2:
+    data_ber: 0.492175
+    exact_match: 0.046
+    seed_ber: 0.4142916666666666
+  3:
+    data_ber: 0.264934375
+    exact_match: 0.55775
+    seed_ber: 0.17614583333333333
+  4:
+    data_ber: 0.0444140625
+    exact_match: 0.956375
+    seed_ber: 0.017312499999999953
+  5:
+    data_ber: 0.0078640625
+    exact_match: 0.9965
+    seed_ber: 0.0011666666666666492
+  6:
+    data_ber: 0.0031921875
+    exact_match: 0.9965
+    seed_ber: 0.0011250000000000426
+  7:
+    data_ber: 0.0005203125
+    exact_match: 0.9995
+    seed_ber: 0.0001875000000000071
+  8:
+    data_ber: 0.000728125
+    exact_match: 0.998625
+    seed_ber: 0.0004166666666666208
+  9:
+    data_ber: 0.00064375
+    exact_match: 0.998625
+    seed_ber: 0.000395833333333373
+  10:
+    data_ber: 0.0001265625
+    exact_match: 0.99975
+    seed_ber: 6.249999999996536e-05
+8:
+  1:
+    data_ber: 0.49976796875
+    exact_match: 0.0057
+    seed_ber: 0.47843749999999996
+  2:
+    data_ber: 0.4986453125
+    exact_match: 0.0096
+    seed_ber: 0.46158750000000004
+  3:
+    data_ber: 0.49683515625
+    exact_match: 0.0122
+    seed_ber: 0.45043750000000005
+  4:
+    data_ber: 0.03714140625
+    exact_match: 0.9697
+    seed_ber: 0.01078749999999995
+  5:
+    data_ber: 0.007521875
+    exact_match: 0.9973
+    seed_ber: 0.0006625000000000103
+  6:
+    data_ber: 0.0021296875
+    exact_match: 0.9985
+    seed_ber: 0.0004250000000000087
+  7:
+    data_ber: 0.00124140625
+    exact_match: 0.998
+    seed_ber: 0.0007000000000000339
+  8:
+    data_ber: 0.0002171875
+    exact_match: 0.9996
+    seed_ber: 0.00017500000000003624
+  9:
+    data_ber: 0.0004140625
+    exact_match: 0.9992
+    seed_ber: 0.00016249999999995435
+  10:
+    data_ber: 0.00040078125
+    exact_match: 0.9992
+    seed_ber: 0.00017500000000003624
+10:
+  1:
+    data_ber: 0.49995963541666666
+    exact_match: 0.0008
+    seed_ber: 0.4833333333333333
+  2:
+    data_ber: 0.4997260416666667
+    exact_match: 0.0013333333333333333
+    seed_ber: 0.47306666666666664
+  3:
+    data_ber: 0.49944921875
+    exact_match: 0.0018666666666666666
+    seed_ber: 0.4664866666666667
+  4:
+    data_ber: 0.4987888020833333
+    exact_match: 0.0036666666666666666
+    seed_ber: 0.44609333333333334
+  5:
+    data_ber: 0.4868651041666667
+    exact_match: 0.027733333333333332
+    seed_ber: 0.37556
+  6:
+    data_ber: 0.002994270833333333
+    exact_match: 0.9966666666666667
+    seed_ber: 0.0007866666666667133
+  7:
+    data_ber: 0.0012942708333333333
+    exact_match: 0.9978666666666667
+    seed_ber: 0.0004266666666666863
+  8:
+    data_ber: 0.00010026041666666667
+    exact_match: 0.9998666666666667
+    seed_ber: 1.333333333330966e-05
+  9:
+    data_ber: 0.18879713541666668
+    exact_match: 0.6196666666666667
+    seed_ber: 0.06237333333333328
+  10:
+    data_ber: 0.00013151041666666666
+    exact_match: 0.9997333333333334
+    seed_ber: 2.666666666661932e-05

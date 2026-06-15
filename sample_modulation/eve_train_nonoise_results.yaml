@@ -1,0 +1,16 @@
+4:
+  data_ber: 0.08493125
+  exact_match: 0.8672
+  seed_ber: 0.05369999999999997
+6:
+  data_ber: 0.46921
+  exact_match: 0.09
+  seed_ber: 0.3169666666666666
+8:
+  data_ber: 0.4977828125
+  exact_match: 0.0156
+  seed_ber: 0.38260000000000005
+10:
+  data_ber: 0.4966421875
+  exact_match: 0.006
+  seed_ber: 0.41994

@@ -1,0 +1,91 @@
+=================================================================
+  Y00 Seed Inference Attack: Noiseless Train vs Noisy Test
+=================================================================
+Device: cuda
+S_max: 10.0
+Test Quantum Noise Scale (sigma): 0.5
+LFSR Lengths: [4, 6, 8, 10]
+
+
+#################################################################
+  Target: LFSR 4bit (Cycle: 15)
+#################################################################
+  Generating noiseless training dataset...
+  Generating noisy test dataset (sigma=0.5)...
+  Training...
+    Epoch  10/30 | Train Loss: 0.00008 | Test Loss: 0.36679
+    Epoch  20/30 | Train Loss: 0.00008 | Test Loss: 0.23093
+    Epoch  30/30 | Train Loss: 0.00004 | Test Loss: 0.24064
+  => Seed BER: 0.0537
+  => Exact Match Rate: 0.8672 (4336/5000)
+  => Avg Hamming Distance: 0.21 / 4
+  => Data BER: 0.084931
+  Elapsed Time: 298.2 s (5.0 min)
+  Model saved to ./saved_models_train_nonoise/seed_predictor_4bit.pth
+
+#################################################################
+  Target: LFSR 6bit (Cycle: 63)
+#################################################################
+  Generating noiseless training dataset...
+  Generating noisy test dataset (sigma=0.5)...
+  Training...
+    Epoch  10/40 | Train Loss: 0.00385 | Test Loss: 0.95907
+    Epoch  20/40 | Train Loss: 0.00015 | Test Loss: 1.33414
+    Epoch  30/40 | Train Loss: 0.00012 | Test Loss: 1.56230
+  Early stopping at epoch 31
+  => Seed BER: 0.3170
+  => Exact Match Rate: 0.0900 (450/5000)
+  => Avg Hamming Distance: 1.90 / 6
+  => Data BER: 0.469210
+  Elapsed Time: 508.3 s (8.5 min)
+  Model saved to ./saved_models_train_nonoise/seed_predictor_6bit.pth
+
+#################################################################
+  Target: LFSR 8bit (Cycle: 255)
+#################################################################
+  Generating noiseless training dataset...
+  Generating noisy test dataset (sigma=0.5)...
+  Training...
+    Epoch  10/50 | Train Loss: 0.00049 | Test Loss: 2.78609
+    Epoch  20/50 | Train Loss: 0.00034 | Test Loss: 2.02607
+    Epoch  30/50 | Train Loss: 0.00007 | Test Loss: 2.97193
+  Early stopping at epoch 31
+  => Seed BER: 0.3826
+  => Exact Match Rate: 0.0156 (78/5000)
+  => Avg Hamming Distance: 3.06 / 8
+  => Data BER: 0.497783
+  Elapsed Time: 2806.5 s (46.8 min)
+  Model saved to ./saved_models_train_nonoise/seed_predictor_8bit.pth
+
+#################################################################
+  Target: LFSR 10bit (Cycle: 1023)
+#################################################################
+  Generating noiseless training dataset...
+  Generating noisy test dataset (sigma=0.5)...
+  Training...
+    Epoch  10/60 | Train Loss: 0.00774 | Test Loss: 2.47848
+    Epoch  20/60 | Train Loss: 0.00102 | Test Loss: 3.13749
+    Epoch  30/60 | Train Loss: 0.00003 | Test Loss: 3.25469
+  Early stopping at epoch 31
+  => Seed BER: 0.4199
+  => Exact Match Rate: 0.0060 (30/5000)
+  => Avg Hamming Distance: 4.20 / 10
+  => Data BER: 0.496642
+  Elapsed Time: 14491.2 s (241.5 min)
+  Model saved to ./saved_models_train_nonoise/seed_predictor_10bit.pth
+
+Saved results to eve_train_nonoise_results.yaml
+
+================================================================================
+  Final Performance Summary (Train Noiseless, Test Noisy)
+================================================================================
+  LFSR |   Seed BER |  Exact Match |   Data BER
+--------------------------------------------------
+   4bit |     0.0537 |       0.8672 |   0.084931
+   6bit |     0.3170 |       0.0900 |   0.469210
+   8bit |     0.3826 |       0.0156 |   0.497783
+  10bit |     0.4199 |       0.0060 |   0.496642
+================================================================================
+Results comparison graph saved to: eve_train_nonoise_test_noise_results.png
+
+Total Run Time: 18105.5 s (301.8 min)

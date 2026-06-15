@@ -1,0 +1,297 @@
+Log file: seed_bob_smax_log_20260609_160001.txt
+=================================================================
+  Y00 Legitimate Receiver (Bob) Performance — S_max Sweep
+=================================================================
+Number of Samples: 10,000
+Quantum Noise Scale (sigma): 0.5
+Target LFSR Bit Lengths: [4, 6, 8, 10]
+S_max Sweep values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+Note: Bob knows the initial seed, performing threshold decoding analytically.
+Note: Neural network is not used here (analytical reference).
+
+
+#################################################################
+  S_max = 1
+#################################################################
+  Signal Level Spacing: 0.000122
+  Spacing / sigma (Effective SNR indicator): 0.0002
+
+  ── LFSR 4bit (Cycle: 15, Length: 64) ──
+  Data BER:       0.309631
+  Error Bits:     198,164 / 640,000
+  Elapsed Time:   0.22 s
+
+  ── LFSR 6bit (Cycle: 63, Length: 80) ──
+  Data BER:       0.309229
+  Error Bits:     247,383 / 800,000
+  Elapsed Time:   0.25 s
+
+  ── LFSR 8bit (Cycle: 255, Length: 128) ──
+  Data BER:       0.307882
+  Error Bits:     394,089 / 1,280,000
+  Elapsed Time:   0.47 s
+
+  ── LFSR 10bit (Cycle: 1023, Length: 256) ──
+  Data BER:       0.308294
+  Error Bits:     789,232 / 2,560,000
+  Elapsed Time:   0.82 s
+
+#################################################################
+  S_max = 2
+#################################################################
+  Signal Level Spacing: 0.000244
+  Spacing / sigma (Effective SNR indicator): 0.0005
+
+  ── LFSR 4bit (Cycle: 15, Length: 64) ──
+  Data BER:       0.159077
+  Error Bits:     101,809 / 640,000
+  Elapsed Time:   0.21 s
+
+  ── LFSR 6bit (Cycle: 63, Length: 80) ──
+  Data BER:       0.158580
+  Error Bits:     126,864 / 800,000
+  Elapsed Time:   0.25 s
+
+  ── LFSR 8bit (Cycle: 255, Length: 128) ──
+  Data BER:       0.158148
+  Error Bits:     202,430 / 1,280,000
+  Elapsed Time:   0.46 s
+
+  ── LFSR 10bit (Cycle: 1023, Length: 256) ──
+  Data BER:       0.158747
+  Error Bits:     406,393 / 2,560,000
+  Elapsed Time:   0.82 s
+
+#################################################################
+  S_max = 3
+#################################################################
+  Signal Level Spacing: 0.000366
+  Spacing / sigma (Effective SNR indicator): 0.0007
+
+  ── LFSR 4bit (Cycle: 15, Length: 64) ──
+  Data BER:       0.066269
+  Error Bits:     42,412 / 640,000
+  Elapsed Time:   0.21 s
+
+  ── LFSR 6bit (Cycle: 63, Length: 80) ──
+  Data BER:       0.066390
+  Error Bits:     53,112 / 800,000
+  Elapsed Time:   0.25 s
+
+  ── LFSR 8bit (Cycle: 255, Length: 128) ──
+  Data BER:       0.066386
+  Error Bits:     84,974 / 1,280,000
+  Elapsed Time:   0.46 s
+
+  ── LFSR 10bit (Cycle: 1023, Length: 256) ──
+  Data BER:       0.066608
+  Error Bits:     170,516 / 2,560,000
+  Elapsed Time:   0.81 s
+
+#################################################################
+  S_max = 4
+#################################################################
+  Signal Level Spacing: 0.000488
+  Spacing / sigma (Effective SNR indicator): 0.0010
+
+  ── LFSR 4bit (Cycle: 15, Length: 64) ──
+  Data BER:       0.022605
+  Error Bits:     14,467 / 640,000
+  Elapsed Time:   0.20 s
+
+  ── LFSR 6bit (Cycle: 63, Length: 80) ──
+  Data BER:       0.022479
+  Error Bits:     17,983 / 800,000
+  Elapsed Time:   0.23 s
+
+  ── LFSR 8bit (Cycle: 255, Length: 128) ──
+  Data BER:       0.022479
+  Error Bits:     28,773 / 1,280,000
+  Elapsed Time:   0.46 s
+
+  ── LFSR 10bit (Cycle: 1023, Length: 256) ──
+  Data BER:       0.022713
+  Error Bits:     58,146 / 2,560,000
+  Elapsed Time:   0.81 s
+
+#################################################################
+  S_max = 5
+#################################################################
+  Signal Level Spacing: 0.000610
+  Spacing / sigma (Effective SNR indicator): 0.0012
+
+  ── LFSR 4bit (Cycle: 15, Length: 64) ──
+  Data BER:       0.006311
+  Error Bits:     4,039 / 640,000
+  Elapsed Time:   0.20 s
+
+  ── LFSR 6bit (Cycle: 63, Length: 80) ──
+  Data BER:       0.006169
+  Error Bits:     4,935 / 800,000
+  Elapsed Time:   0.23 s
+
+  ── LFSR 8bit (Cycle: 255, Length: 128) ──
+  Data BER:       0.006177
+  Error Bits:     7,906 / 1,280,000
+  Elapsed Time:   0.46 s
+
+  ── LFSR 10bit (Cycle: 1023, Length: 256) ──
+  Data BER:       0.006167
+  Error Bits:     15,788 / 2,560,000
+  Elapsed Time:   0.81 s
+
+#################################################################
+  S_max = 6
+#################################################################
+  Signal Level Spacing: 0.000733
+  Spacing / sigma (Effective SNR indicator): 0.0015
+
+  ── LFSR 4bit (Cycle: 15, Length: 64) ──
+  Data BER:       0.001430
+  Error Bits:     915 / 640,000
+  Elapsed Time:   0.20 s
+
+  ── LFSR 6bit (Cycle: 63, Length: 80) ──
+  Data BER:       0.001345
+  Error Bits:     1,076 / 800,000
+  Elapsed Time:   0.23 s
+
+  ── LFSR 8bit (Cycle: 255, Length: 128) ──
+  Data BER:       0.001404
+  Error Bits:     1,797 / 1,280,000
+  Elapsed Time:   0.46 s
+
+  ── LFSR 10bit (Cycle: 1023, Length: 256) ──
+  Data BER:       0.001328
+  Error Bits:     3,399 / 2,560,000
+  Elapsed Time:   0.81 s
+
+#################################################################
+  S_max = 7
+#################################################################
+  Signal Level Spacing: 0.000855
+  Spacing / sigma (Effective SNR indicator): 0.0017
+
+  ── LFSR 4bit (Cycle: 15, Length: 64) ──
+  Data BER:       0.000241
+  Error Bits:     154 / 640,000
+  Elapsed Time:   0.20 s
+
+  ── LFSR 6bit (Cycle: 63, Length: 80) ──
+  Data BER:       0.000211
+  Error Bits:     169 / 800,000
+  Elapsed Time:   0.23 s
+
+  ── LFSR 8bit (Cycle: 255, Length: 128) ──
+  Data BER:       0.000255
+  Error Bits:     326 / 1,280,000
+  Elapsed Time:   0.46 s
+
+  ── LFSR 10bit (Cycle: 1023, Length: 256) ──
+  Data BER:       0.000236
+  Error Bits:     605 / 2,560,000
+  Elapsed Time:   0.81 s
+
+#################################################################
+  S_max = 8
+#################################################################
+  Signal Level Spacing: 0.000977
+  Spacing / sigma (Effective SNR indicator): 0.0020
+
+  ── LFSR 4bit (Cycle: 15, Length: 64) ──
+  Data BER:       0.000041
+  Error Bits:     26 / 640,000
+  Elapsed Time:   0.20 s
+
+  ── LFSR 6bit (Cycle: 63, Length: 80) ──
+  Data BER:       0.000020
+  Error Bits:     16 / 800,000
+  Elapsed Time:   0.23 s
+
+  ── LFSR 8bit (Cycle: 255, Length: 128) ──
+  Data BER:       0.000037
+  Error Bits:     48 / 1,280,000
+  Elapsed Time:   0.46 s
+
+  ── LFSR 10bit (Cycle: 1023, Length: 256) ──
+  Data BER:       0.000035
+  Error Bits:     90 / 2,560,000
+  Elapsed Time:   0.81 s
+
+#################################################################
+  S_max = 9
+#################################################################
+  Signal Level Spacing: 0.001099
+  Spacing / sigma (Effective SNR indicator): 0.0022
+
+  ── LFSR 4bit (Cycle: 15, Length: 64) ──
+  Data BER:       0.000003
+  Error Bits:     2 / 640,000
+  Elapsed Time:   0.20 s
+
+  ── LFSR 6bit (Cycle: 63, Length: 80) ──
+  Data BER:       0.000004
+  Error Bits:     3 / 800,000
+  Elapsed Time:   0.23 s
+
+  ── LFSR 8bit (Cycle: 255, Length: 128) ──
+  Data BER:       0.000005
+  Error Bits:     7 / 1,280,000
+  Elapsed Time:   0.46 s
+
+  ── LFSR 10bit (Cycle: 1023, Length: 256) ──
+  Data BER:       0.000003
+  Error Bits:     8 / 2,560,000
+  Elapsed Time:   0.81 s
+
+#################################################################
+  S_max = 10
+#################################################################
+  Signal Level Spacing: 0.001221
+  Spacing / sigma (Effective SNR indicator): 0.0024
+
+  ── LFSR 4bit (Cycle: 15, Length: 64) ──
+  Data BER:       0.000000
+  Error Bits:     0 / 640,000
+  Elapsed Time:   0.20 s
+
+  ── LFSR 6bit (Cycle: 63, Length: 80) ──
+  Data BER:       0.000000
+  Error Bits:     0 / 800,000
+  Elapsed Time:   0.23 s
+
+  ── LFSR 8bit (Cycle: 255, Length: 128) ──
+  Data BER:       0.000000
+  Error Bits:     0 / 1,280,000
+  Elapsed Time:   0.46 s
+
+  ── LFSR 10bit (Cycle: 1023, Length: 256) ──
+  Data BER:       0.000000
+  Error Bits:     0 / 2,560,000
+  Elapsed Time:   0.81 s
+
+================================================================================
+  Data BER Summary — Legitimate Receiver (Bob)
+================================================================================
+  LFSR | S= 1  | S= 2  | S= 3  | S= 4  | S= 5  | S= 6  | S= 7  | S= 8  | S= 9  | S=10  |
+----------------------------------------------------------------------------------------
+   4bit | 0.3096 | 0.1591 | 0.0663 | 0.0226 | 0.0063 | 0.0014 | 0.0002 | 0.0000 | 0.0000 | 0.0000 |
+   6bit | 0.3092 | 0.1586 | 0.0664 | 0.0225 | 0.0062 | 0.0013 | 0.0002 | 0.0000 | 0.0000 | 0.0000 |
+   8bit | 0.3079 | 0.1581 | 0.0664 | 0.0225 | 0.0062 | 0.0014 | 0.0003 | 0.0000 | 0.0000 | 0.0000 |
+  10bit | 0.3083 | 0.1587 | 0.0666 | 0.0227 | 0.0062 | 0.0013 | 0.0002 | 0.0000 | 0.0000 | 0.0000 |
+
+================================================================================
+  Analysis: Minimum S_max required to reach BER < 1e-3 (practical communication)
+================================================================================
+  LFSR  4bit: S_max >= 7 reaches BER < 0.001
+  LFSR  6bit: S_max >= 7 reaches BER < 0.001
+  LFSR  8bit: S_max >= 7 reaches BER < 0.001
+  LFSR 10bit: S_max >= 7 reaches BER < 0.001
+
+Generating plots...
+Bob 4-panel graph saved: seed_bob_smax_results.png
+Bob single BER graph saved: seed_bob_smax_ber_single.png
+Eve results file not found at eve_smax_results.yaml. Skipping comparison plot.
+
+Total Elapsed Time: 21.8 s (0.4 min)
