@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-seed_claude_train_nonoise.py
+seed_claude_train_compare.py
 
 目的:
-  学習時にはノイズなしのデータを使い、テストデータにだけ量子ノイズ（sigma=0.5）を入れた場合の
-  シード推論攻撃（Eve）の性能を検証する。
+  ノイズあり(sigma=0.5)で学習したモデルと、ノイズなし(sigma=0.0)で学習したモデルを、
+  同じノイズあり(sigma=0.5)のテストデータで評価し、その性能（Seed BER, Data BER）を直接比較する。
   S_max = 10.0 固定。
 """
 
@@ -34,11 +34,11 @@ LFSR_TAPS = {
 }
 
 # 物理定数
-QUANTUM_NOISE_SCALE = 0.5   # テスト用量子ノイズ（シグマ）
+TEST_NOISE_SCALE = 0.5      # テスト時に加える量子ノイズ（シグマ）
 SMAX_VALUE = 10.0           # 信号レベル最大値（S_max）
 
 # 保存先
-MODEL_SAVE_DIR = './saved_models_train_nonoise'
+MODEL_SAVE_DIR = './saved_models_train_compare'
 
 # ハイパーパラメータ設定 (LFSR長ごと)
 # (d_model, lstm_hidden, nhead, lstm_layers, n_train, n_test, seq_len, epochs, batch_size, accum_steps)
@@ -198,21 +198,21 @@ def get_warmup_cosine_scheduler(optimizer, warmup_epochs, total_epochs):
     return optim.lr_scheduler.LambdaLR(optimizer, lr_lambda)
 
 
-def train_and_evaluate(lfsr_len, device):
-    """学習データはノイズなし (noise=0.0)、テストデータはノイズあり (noise=0.5) で評価。"""
+def train_and_evaluate_scenario(lfsr_len, device, train_noise_scale, scenario_name):
+    """特定の学習ノイズスケール（0.0 または 0.5）で学習し、sigma=0.5 のテストデータで評価する。"""
     d_model, lstm_hidden, nhead, lstm_layers, n_train, n_test, \
         seq_len, epochs, batch_size, accum_steps = CONFIG[lfsr_len]
-    
+
+    print(f"\n  [Scenario: {scenario_name}] Training with noise={train_noise_scale}...")
+
     # ── データ生成 ──
-    print("  Generating noiseless training dataset...")
-    # Explicitly use training seed to generate train samples
+    print("    Generating training dataset (dataset_seed=12345)...")
     X_train, Y_train, _, _, _ = generate_seed_dataset(
-        n_train, lfsr_len, seq_len, noise_scale=0.0, s_max=SMAX_VALUE, dataset_seed=12345)
+        n_train, lfsr_len, seq_len, noise_scale=train_noise_scale, s_max=SMAX_VALUE, dataset_seed=12345)
     
-    print(f"  Generating noisy test dataset (sigma={QUANTUM_NOISE_SCALE})...")
-    # Explicitly use a different seed for testing to prevent data leakage
+    print(f"    Generating test dataset (sigma={TEST_NOISE_SCALE}, dataset_seed=54321)...")
     X_test, Y_test, test_seeds, test_input_data, test_raw_obs = \
-        generate_seed_dataset(n_test, lfsr_len, seq_len, noise_scale=QUANTUM_NOISE_SCALE, s_max=SMAX_VALUE, dataset_seed=54321)
+        generate_seed_dataset(n_test, lfsr_len, seq_len, noise_scale=TEST_NOISE_SCALE, s_max=SMAX_VALUE, dataset_seed=54321)
 
     train_ds = TensorDataset(torch.from_numpy(X_train), torch.from_numpy(Y_train))
     test_ds = TensorDataset(torch.from_numpy(X_test), torch.from_numpy(Y_test))
@@ -235,7 +235,6 @@ def train_and_evaluate(lfsr_len, device):
     patience = 30
     patience_counter = 0
 
-    print("  Training...")
     for epoch in range(1, epochs + 1):
         model.train()
         total_loss = 0.0
@@ -256,7 +255,7 @@ def train_and_evaluate(lfsr_len, device):
         scheduler.step()
         avg_loss = total_loss / len(train_loader)
 
-        # 評価（テストロス）
+        # 評価
         model.eval()
         val_loss = 0.0
         with torch.no_grad():
@@ -268,7 +267,7 @@ def train_and_evaluate(lfsr_len, device):
         avg_val_loss = val_loss / len(test_loader)
 
         if epoch % 10 == 0 or epoch == epochs:
-            print(f"    Epoch {epoch:>3}/{epochs} | Train Loss: {avg_loss:.5f} | Test Loss: {avg_val_loss:.5f}")
+            print(f"      Epoch {epoch:>3}/{epochs} | Train Loss: {avg_loss:.5f} | Test Loss: {avg_val_loss:.5f}")
 
         if avg_val_loss < best_val_loss:
             best_val_loss = avg_val_loss
@@ -277,7 +276,7 @@ def train_and_evaluate(lfsr_len, device):
         else:
             patience_counter += 1
             if patience_counter >= patience:
-                print(f"  Early stopping at epoch {epoch}")
+                print(f"    Early stopping at epoch {epoch}")
                 break
 
     # ── 最終評価 ──
@@ -312,18 +311,14 @@ def train_and_evaluate(lfsr_len, device):
     data_ber, data_errors = eve_decode_data(
         pred_seeds, lfsr_len, seq_len, SMAX_VALUE, test_raw_obs, test_input_data)
 
-    print(f"  => Seed BER: {ber:.4f}")
-    print(f"  => Exact Match Rate: {exact_match_rate:.4f} ({np.sum(exact_matches)}/{n_test})")
-    print(f"  => Avg Hamming Distance: {np.mean(hamming_dists):.2f} / {lfsr_len}")
-    print(f"  => Data BER: {data_ber:.6f}")
+    print(f"    => Seed BER: {ber:.4f}")
+    print(f"    => Exact Match Rate: {exact_match_rate:.4f} ({np.sum(exact_matches)}/{n_test})")
+    print(f"    => Data BER: {data_ber:.6f}")
 
     return {
         'ber': ber,
         'exact_match': exact_match_rate,
-        'hamming_dists': hamming_dists,
         'data_ber': data_ber,
-        'data_errors': data_errors,
-        'lfsr_len': lfsr_len,
         'best_state': best_state,
         'model_config': {
             'd_model': d_model,
@@ -339,35 +334,38 @@ def train_and_evaluate(lfsr_len, device):
 # 結果の可視化
 # ══════════════════════════════════════════════
 
-def plot_nonoise_results(results_dict, lfsr_lengths):
-    """LFSR長ごとの Seed BER と Data BER の比較プロットを英語で生成する。"""
+def plot_comparison_results(results, lfsr_lengths):
+    """Noisy Training と Noiseless Training の性能を比較する英語の棒グラフを生成。"""
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6))
     
     x = np.arange(len(lfsr_lengths))
     width = 0.35
 
-    # ── Left: Seed BER & Exact Match ──
-    seed_bers = [results_dict[l]['ber'] for l in lfsr_lengths]
-    exact_matches = [results_dict[l]['exact_match'] for l in lfsr_lengths]
-    
-    ax1.bar(x - width/2, seed_bers, width, label='Seed BER', color='navy', alpha=0.8)
-    ax1.bar(x + width/2, exact_matches, width, label='Exact Match Rate', color='teal', alpha=0.8)
-    ax1.set_ylabel('Rate / Error Prob.', fontsize=12)
+    # ── Left: Seed BER Comparison ──
+    noisy_seed_bers = [results[l]['noisy']['ber'] for l in lfsr_lengths]
+    noiseless_seed_bers = [results[l]['noiseless']['ber'] for l in lfsr_lengths]
+
+    ax1.bar(x - width/2, noisy_seed_bers, width, label='Noisy Train (sigma=0.5)', color='navy', alpha=0.8)
+    ax1.bar(x + width/2, noiseless_seed_bers, width, label='Noiseless Train (sigma=0.0)', color='teal', alpha=0.7)
+    ax1.set_ylabel('Seed BER', fontsize=12)
     ax1.set_xlabel('LFSR Bit Length', fontsize=12)
-    ax1.set_title('Seed Inference Performance', fontsize=14)
+    ax1.set_title('Seed BER Comparison (Lower is Better)', fontsize=14)
     ax1.set_xticks(x)
     ax1.set_xticklabels([f'{l}bit' for l in lfsr_lengths])
-    ax1.set_ylim(-0.02, 1.05)
-    ax1.axhline(y=0.5, color='red', linestyle='--', alpha=0.5, label='Random Seed BER (0.5)')
+    ax1.set_ylim(-0.02, 0.55)
+    ax1.axhline(y=0.5, color='red', linestyle='--', alpha=0.5, label='Random Guess (0.5)')
     ax1.grid(True, linestyle=':', alpha=0.6)
     ax1.legend(fontsize=10)
 
-    # ── Right: Data BER ──
-    data_bers = [results_dict[l]['data_ber'] for l in lfsr_lengths]
-    ax2.bar(x, data_bers, width*1.2, label='Eve Decoded Data BER', color='crimson', alpha=0.8)
+    # ── Right: Data BER Comparison ──
+    noisy_data_bers = [results[l]['noisy']['data_ber'] for l in lfsr_lengths]
+    noiseless_data_bers = [results[l]['noiseless']['data_ber'] for l in lfsr_lengths]
+
+    ax2.bar(x - width/2, noisy_data_bers, width, label='Noisy Train (sigma=0.5)', color='crimson', alpha=0.8)
+    ax2.bar(x + width/2, noiseless_data_bers, width, label='Noiseless Train (sigma=0.0)', color='orange', alpha=0.7)
     ax2.set_ylabel('Data BER', fontsize=12)
     ax2.set_xlabel('LFSR Bit Length', fontsize=12)
-    ax2.set_title('Decoded Data BER', fontsize=14)
+    ax2.set_title('Decoded Data BER Comparison (Lower is Better)', fontsize=14)
     ax2.set_xticks(x)
     ax2.set_xticklabels([f'{l}bit' for l in lfsr_lengths])
     ax2.set_ylim(-0.02, 0.55)
@@ -375,12 +373,12 @@ def plot_nonoise_results(results_dict, lfsr_lengths):
     ax2.grid(True, linestyle=':', alpha=0.6)
     ax2.legend(fontsize=10)
 
-    fig.suptitle(f'Eve Cryptanalysis on Noisy Test Data (sigma={QUANTUM_NOISE_SCALE}) Trained on Noiseless Data', 
+    fig.suptitle(f'Generalization Performance: Noisy Train vs Noiseless Train (Test Noise sigma={TEST_NOISE_SCALE})', 
                  fontsize=15, y=1.02)
     fig.tight_layout()
-    out = 'eve_train_nonoise_test_noise_results.png'
+    out = 'train_compare_results.png'
     plt.savefig(out, dpi=300, bbox_inches='tight')
-    print(f"Results comparison graph saved to: {out}")
+    print(f"\n[Plot] Comparison graph saved to: {out}")
 
 
 # ══════════════════════════════════════════════
@@ -388,7 +386,6 @@ def plot_nonoise_results(results_dict, lfsr_lengths):
 # ══════════════════════════════════════════════
 
 class TeeLogger:
-    """標準出力をコンソールとファイルの両方に書き出す。"""
     def __init__(self, filepath):
         self.terminal = sys.stdout
         self.log = open(filepath, 'w', encoding='utf-8')
@@ -410,12 +407,12 @@ class TeeLogger:
 def main():
     lfsr_lengths = [4, 6, 8, 10]
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    print("=" * 65)
-    print("  Y00 Seed Inference Attack: Noiseless Train vs Noisy Test")
-    print("=" * 65)
+    print("=" * 70)
+    print("  Y00 Generalization Analysis: Noisy Train vs Noiseless Train")
+    print("=" * 70)
     print(f"Device: {device}")
     print(f"S_max: {SMAX_VALUE}")
-    print(f"Test Quantum Noise Scale (sigma): {QUANTUM_NOISE_SCALE}")
+    print(f"Evaluation Test Noise Scale (sigma): {TEST_NOISE_SCALE}")
     print(f"LFSR Lengths: {lfsr_lengths}")
     print()
 
@@ -423,60 +420,76 @@ def main():
     results = {}
 
     for l_len in lfsr_lengths:
-        print(f"\n{'#' * 65}")
-        print(f"  Target: LFSR {l_len}bit (Cycle: {(1 << l_len) - 1})")
-        print(f"{'#' * 65}")
+        print(f"\n{'#' * 70}")
+        print(f"  Target: LFSR {l_len}bit")
+        print(f"{'#' * 70}")
         
-        t_start = time.time()
-        res = train_and_evaluate(l_len, device)
-        elapsed = time.time() - t_start
-        print(f"  Elapsed Time: {elapsed:.1f} s ({elapsed/60:.1f} min)")
+        # 1. Noisy Training
+        noisy_res = train_and_evaluate_scenario(l_len, device, train_noise_scale=0.5, scenario_name='Noisy Train')
+        
+        # 2. Noiseless Training
+        noiseless_res = train_and_evaluate_scenario(l_len, device, train_noise_scale=0.0, scenario_name='Noiseless Train')
 
-        results[l_len] = res
+        results[l_len] = {
+            'noisy': noisy_res,
+            'noiseless': noiseless_res
+        }
 
-        # モデルの保存
-        if res['best_state'] is not None:
-            model_path = os.path.join(MODEL_SAVE_DIR, f'seed_predictor_{l_len}bit.pth')
-            torch.save({
-                'model_state_dict': res['best_state'],
-                'model_config': res['model_config'],
-                'lfsr_length': l_len,
-                's_max': SMAX_VALUE,
-                'ber': res['ber'],
-                'data_ber': res['data_ber'],
-            }, model_path)
-            print(f"  Model saved to {model_path}")
+        # 各モデルの保存
+        for key, res in [('noisy', noisy_res), ('noiseless', noiseless_res)]:
+            if res['best_state'] is not None:
+                model_path = os.path.join(MODEL_SAVE_DIR, f'seed_predictor_{l_len}bit_{key}.pth')
+                torch.save({
+                    'model_state_dict': res['best_state'],
+                    'model_config': res['model_config'],
+                    'lfsr_length': l_len,
+                    's_max': SMAX_VALUE,
+                    'ber': res['ber'],
+                    'data_ber': res['data_ber'],
+                }, model_path)
+                print(f"  Model ({key}) saved to {model_path}")
 
     # 結果をYAMLにエクスポート
     yaml_data = {}
     for l_len in lfsr_lengths:
         yaml_data[int(l_len)] = {
-            'seed_ber': float(results[l_len]['ber']),
-            'exact_match': float(results_dict := results[l_len]['exact_match']),
-            'data_ber': float(results[l_len]['data_ber']),
+            'noisy': {
+                'seed_ber': float(results[l_len]['noisy']['ber']),
+                'exact_match': float(results[l_len]['noisy']['exact_match']),
+                'data_ber': float(results[l_len]['noisy']['data_ber']),
+            },
+            'noiseless': {
+                'seed_ber': float(results[l_len]['noiseless']['ber']),
+                'exact_match': float(results[l_len]['noiseless']['exact_match']),
+                'data_ber': float(results[l_len]['noiseless']['data_ber']),
+            }
         }
-    yaml_path = 'eve_train_nonoise_results.yaml'
+    yaml_path = 'train_compare_results.yaml'
     with open(yaml_path, 'w') as f:
         yaml.dump(yaml_data, f, default_flow_style=False)
-    print(f"\nSaved results to {yaml_path}")
+    print(f"\nSaved all results to {yaml_path}")
 
     # サマリー印刷
     print("\n" + "=" * 80)
-    print("  Final Performance Summary (Train Noiseless, Test Noisy)")
+    print("  Final Comparison Summary (Evaluated on Test Noise sigma=0.5)")
     print("=" * 80)
-    print(f"{'LFSR':>6} | {'Seed BER':>10} | {'Exact Match':>12} | {'Data BER':>10}")
-    print("-" * 50)
+    print(f"{'LFSR':>6} | {'Noisy Train (Seed BER)':>22} | {'Noiseless Train (Seed BER)':>26} | {'Noisy (Data BER)':>16} | {'Noiseless (Data BER)':>20}")
+    print("-" * 105)
     for l_len in lfsr_lengths:
-        print(f"{l_len:>4}bit | {results[l_len]['ber']:>10.4f} | {results[l_len]['exact_match']:>12.4f} | {results[l_len]['data_ber']:>10.6f}")
+        n_seed = results[l_len]['noisy']['ber']
+        nl_seed = results[l_len]['noiseless']['ber']
+        n_data = results[l_len]['noisy']['data_ber']
+        nl_data = results[l_len]['noiseless']['data_ber']
+        print(f"{l_len:>4}bit | {n_seed:>22.4f} | {nl_seed:>26.4f} | {n_data:>16.6f} | {nl_data:>20.6f}")
     print("=" * 80)
 
     # グラフのプロット
-    plot_nonoise_results(results, lfsr_lengths)
+    plot_comparison_results(results, lfsr_lengths)
 
 
 if __name__ == "__main__":
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    log_filename = f'seed_claude_train_nonoise_log_{timestamp}.txt'
+    log_filename = f'seed_claude_train_compare_log_{timestamp}.txt'
     tee = TeeLogger(log_filename)
     sys.stdout = tee
 
