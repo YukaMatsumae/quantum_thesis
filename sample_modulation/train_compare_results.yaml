@@ -1,0 +1,36 @@
+4:
+  noiseless:
+    data_ber: 0.047571875
+    exact_match: 0.9268
+    seed_ber: 0.031749999999999945
+  noisy:
+    data_ber: 0.0
+    exact_match: 1.0
+    seed_ber: 0.0
+6:
+  noiseless:
+    data_ber: 0.3319325
+    exact_match: 0.36
+    seed_ber: 0.20299999999999996
+  noisy:
+    data_ber: 0.0001125
+    exact_match: 0.9998
+    seed_ber: 6.666666666665932e-05
+8:
+  noiseless:
+    data_ber: 0.495140625
+    exact_match: 0.021
+    seed_ber: 0.39227500000000004
+  noisy:
+    data_ber: 0.0003171875
+    exact_match: 0.9994
+    seed_ber: 0.00014999999999998348
+10:
+  noiseless:
+    data_ber: 0.4974140625
+    exact_match: 0.0054
+    seed_ber: 0.42062
+  noisy:
+    data_ber: 0.34723515625
+    exact_match: 0.2974
+    seed_ber: 0.14305999999999996

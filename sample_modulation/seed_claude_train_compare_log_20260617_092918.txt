@@ -1,0 +1,136 @@
+======================================================================
+  Y00 Generalization Analysis: Noisy Train vs Noiseless Train
+======================================================================
+Device: cuda
+S_max: 10.0
+Evaluation Test Noise Scale (sigma): 0.5
+LFSR Lengths: [4, 6, 8, 10]
+
+
+######################################################################
+  Target: LFSR 4bit
+######################################################################
+
+  [Scenario: Noisy Train] Training with noise=0.5...
+    Generating training dataset (dataset_seed=12345)...
+    Generating test dataset (sigma=0.5, dataset_seed=54321)...
+      Epoch  10/30 | Train Loss: 0.00011 | Test Loss: 0.00001
+      Epoch  20/30 | Train Loss: 0.00004 | Test Loss: 0.00000
+      Epoch  30/30 | Train Loss: 0.00003 | Test Loss: 0.00000
+    => Seed BER: 0.0000
+    => Exact Match Rate: 1.0000 (5000/5000)
+    => Data BER: 0.000000
+
+  [Scenario: Noiseless Train] Training with noise=0.0...
+    Generating training dataset (dataset_seed=12345)...
+    Generating test dataset (sigma=0.5, dataset_seed=54321)...
+      Epoch  10/30 | Train Loss: 0.00012 | Test Loss: 0.17199
+      Epoch  20/30 | Train Loss: 0.00003 | Test Loss: 0.20898
+      Epoch  30/30 | Train Loss: 0.00002 | Test Loss: 0.21110
+    => Seed BER: 0.0317
+    => Exact Match Rate: 0.9268 (4634/5000)
+    => Data BER: 0.047572
+  Model (noisy) saved to ./saved_models_train_compare/seed_predictor_4bit_noisy.pth
+  Model (noiseless) saved to ./saved_models_train_compare/seed_predictor_4bit_noiseless.pth
+
+######################################################################
+  Target: LFSR 6bit
+######################################################################
+
+  [Scenario: Noisy Train] Training with noise=0.5...
+    Generating training dataset (dataset_seed=12345)...
+    Generating test dataset (sigma=0.5, dataset_seed=54321)...
+      Epoch  10/40 | Train Loss: 0.00287 | Test Loss: 0.00148
+      Epoch  20/40 | Train Loss: 0.00016 | Test Loss: 0.00044
+      Epoch  30/40 | Train Loss: 0.00012 | Test Loss: 0.00096
+      Epoch  40/40 | Train Loss: 0.00007 | Test Loss: 0.00103
+    => Seed BER: 0.0001
+    => Exact Match Rate: 0.9998 (4999/5000)
+    => Data BER: 0.000112
+
+  [Scenario: Noiseless Train] Training with noise=0.0...
+    Generating training dataset (dataset_seed=12345)...
+    Generating test dataset (sigma=0.5, dataset_seed=54321)...
+      Epoch  10/40 | Train Loss: 0.00054 | Test Loss: 1.00999
+      Epoch  20/40 | Train Loss: 0.00019 | Test Loss: 0.93943
+      Epoch  30/40 | Train Loss: 0.00009 | Test Loss: 1.22519
+    Early stopping at epoch 32
+    => Seed BER: 0.2030
+    => Exact Match Rate: 0.3600 (1800/5000)
+    => Data BER: 0.331933
+  Model (noisy) saved to ./saved_models_train_compare/seed_predictor_6bit_noisy.pth
+  Model (noiseless) saved to ./saved_models_train_compare/seed_predictor_6bit_noiseless.pth
+
+######################################################################
+  Target: LFSR 8bit
+######################################################################
+
+  [Scenario: Noisy Train] Training with noise=0.5...
+    Generating training dataset (dataset_seed=12345)...
+    Generating test dataset (sigma=0.5, dataset_seed=54321)...
+      Epoch  10/50 | Train Loss: 0.00831 | Test Loss: 0.00514
+      Epoch  20/50 | Train Loss: 0.00820 | Test Loss: 0.00542
+      Epoch  30/50 | Train Loss: 0.00113 | Test Loss: 0.00114
+      Epoch  40/50 | Train Loss: 0.00022 | Test Loss: 0.00043
+      Epoch  50/50 | Train Loss: 0.00014 | Test Loss: 0.00069
+    => Seed BER: 0.0001
+    => Exact Match Rate: 0.9994 (4997/5000)
+    => Data BER: 0.000317
+
+  [Scenario: Noiseless Train] Training with noise=0.0...
+    Generating training dataset (dataset_seed=12345)...
+    Generating test dataset (sigma=0.5, dataset_seed=54321)...
+      Epoch  10/50 | Train Loss: 0.00058 | Test Loss: 2.55073
+      Epoch  20/50 | Train Loss: 0.00020 | Test Loss: 3.19230
+      Epoch  30/50 | Train Loss: 0.00005 | Test Loss: 2.95596
+    Early stopping at epoch 31
+    => Seed BER: 0.3923
+    => Exact Match Rate: 0.0210 (105/5000)
+    => Data BER: 0.495141
+  Model (noisy) saved to ./saved_models_train_compare/seed_predictor_8bit_noisy.pth
+  Model (noiseless) saved to ./saved_models_train_compare/seed_predictor_8bit_noiseless.pth
+
+######################################################################
+  Target: LFSR 10bit
+######################################################################
+
+  [Scenario: Noisy Train] Training with noise=0.5...
+    Generating training dataset (dataset_seed=12345)...
+    Generating test dataset (sigma=0.5, dataset_seed=54321)...
+      Epoch  10/60 | Train Loss: 0.69315 | Test Loss: 0.69316
+      Epoch  20/60 | Train Loss: 0.69315 | Test Loss: 0.69316
+      Epoch  30/60 | Train Loss: 0.69314 | Test Loss: 0.69315
+    Early stopping at epoch 36
+    => Seed BER: 0.1431
+    => Exact Match Rate: 0.2974 (1487/5000)
+    => Data BER: 0.347235
+
+  [Scenario: Noiseless Train] Training with noise=0.0...
+    Generating training dataset (dataset_seed=12345)...
+    Generating test dataset (sigma=0.5, dataset_seed=54321)...
+      Epoch  10/60 | Train Loss: 0.01437 | Test Loss: 3.15954
+      Epoch  20/60 | Train Loss: 0.00015 | Test Loss: 4.91712
+      Epoch  30/60 | Train Loss: 0.00064 | Test Loss: 3.66825
+    Early stopping at epoch 31
+    => Seed BER: 0.4206
+    => Exact Match Rate: 0.0054 (27/5000)
+    => Data BER: 0.497414
+  Model (noisy) saved to ./saved_models_train_compare/seed_predictor_10bit_noisy.pth
+  Model (noiseless) saved to ./saved_models_train_compare/seed_predictor_10bit_noiseless.pth
+
+Saved all results to train_compare_results.yaml
+
+================================================================================
+  Final Comparison Summary (Evaluated on Test Noise sigma=0.5)
+================================================================================
+  LFSR | Noisy Train (Seed BER) | Noiseless Train (Seed BER) | Noisy (Data BER) | Noiseless (Data BER)
+---------------------------------------------------------------------------------------------------------
+   4bit |                 0.0000 |                     0.0317 |         0.000000 |             0.047572
+   6bit |                 0.0001 |                     0.2030 |         0.000112 |             0.331933
+   8bit |                 0.0001 |                     0.3923 |         0.000317 |             0.495141
+  10bit |                 0.1431 |                     0.4206 |         0.347235 |             0.497414
+================================================================================
+
+[Plot] Comparison graph saved to: train_compare_results.png
+
+Total Run Time: 40479.1 s (674.7 min)
