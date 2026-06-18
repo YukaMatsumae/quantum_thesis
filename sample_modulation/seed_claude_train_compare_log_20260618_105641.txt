@@ -1,0 +1,18 @@
+======================================================================
+  Y00 Generalization Analysis: Noisy Train vs Noiseless Train
+======================================================================
+Device: cuda
+S_max: 10.0
+Evaluation Test Noise Scale (sigma): 0.5
+LFSR Lengths: [4, 6, 8, 10]
+
+
+######################################################################
+  Target: LFSR 4bit
+######################################################################
+
+  [Scenario: Noisy Train] Training with noise=0.5...
+    Generating training dataset (dataset_seed=12345)...
+    Generating test dataset (sigma=0.5, dataset_seed=54321)...
+      Epoch  10/80 | Train Loss: 0.00068 | Test Loss: 0.00114
+      Epoch  20/80 | Train Loss: 0.00034 | Test Loss: 0.00060

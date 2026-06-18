@@ -43,10 +43,10 @@ MODEL_SAVE_DIR = './saved_models_train_compare'
 # ハイパーパラメータ設定 (LFSR長ごと)
 # (d_model, lstm_hidden, nhead, lstm_layers, n_train, n_test, seq_len, epochs, batch_size, accum_steps)
 CONFIG = {
-    4:  (64,  64,  4, 2,  30_000, 5000, 64,  30, 256, 1),
-    6:  (64,  64,  4, 2,  40_000, 5000, 80,  40, 256, 1),
-    8:  (128, 128, 4, 2,  60_000, 5000, 128, 50, 256, 1),
-    10: (256, 256, 4, 2, 100_000, 5000, 256, 60, 256, 2),
+    4:  (64,  64,  4, 2,  30_000, 5000, 64,  80, 256, 1),
+    6:  (64,  64,  4, 2,  40_000, 5000, 80,  100, 256, 1),
+    8:  (128, 128, 4, 2,  60_000, 5000, 128, 120, 256, 1),
+    10: (256, 256, 4, 2, 100_000, 5000, 256, 150, 256, 2),
 }
 
 
@@ -232,7 +232,7 @@ def train_and_evaluate_scenario(lfsr_len, device, train_noise_scale, scenario_na
 
     best_val_loss = float('inf')
     best_state = None
-    patience = 30
+    patience = 50
     patience_counter = 0
 
     for epoch in range(1, epochs + 1):
